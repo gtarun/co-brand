@@ -1,0 +1,113 @@
+extends ../../../layouts/admin
+
+block head
+  title Events / Details
+
+block feet
+  script(src='/views/admin/events/details.min.js?#{cacheBreaker}')
+
+block body
+  div.row
+    div.col-xs-12
+      div#header
+      div#details
+      div#accounts
+      div#delete
+
+  script(type='text/template', id='tmpl-header')
+    div.page-header
+      h1
+        a(href='/admin/events/') Events
+        |  / <%- title %>
+
+  script(type='text/template', id='tmpl-details')
+    fieldset
+      legend Details
+      div.alerts
+        |<% _.each(errors, function(err) { %>
+        div.alert.alert-danger.alert-dismissable
+          button.close(type='button', data-dismiss='alert') &times;
+          |<%- err %>
+        |<% }); %>
+        |<% if (success) { %>
+        div.alert.alert-info.alert-dismissable
+          button.close(type='button', data-dismiss='alert') &times;
+          | Changes have been saved.
+        |<% } %>
+      div.form-group(class!='<%- errfor.pivot ? "has-error" : "" %>')
+        label Pivot:
+        input.form-control(type='text', name='pivot', value!='<%- pivot %>')
+        span.help-block <%- errfor.pivot %>
+      div.form-group(class!='<%- errfor.title ? "has-error" : "" %>')
+        label Title:
+        input.form-control(type='text', name='title', value!='<%- title %>')
+        span.help-block <%- errfor.title %>
+      div.form-group(class!='<%- errfor.attendance ? "has-error" : "" %>')
+        label Attendance:
+        input.form-control(type='text', name='attendance', value!='<%- attendance %>')
+        span.help-block <%- errfor.attendance %>
+      div.form-group(class!='<%- errfor.participation ? "has-error" : "" %>')
+        label Participation:
+        input.form-control(type='text', name='participation', value!='<%- participation %>')
+        span.help-block <%- errfor.participation %>
+      div.form-group
+        button.btn.btn-primary.btn-update(type='button') Update
+
+  script(type='text/template', id='tmpl-accounts')
+    fieldset
+      legend Accounts
+      div.alerts
+        |<% _.each(errors, function(err) { %>
+        div.alert.alert-danger.alert-dismissable
+          button.close(type='button', data-dismiss='alert') &times;
+          |<%- err %>
+        |<% }); %>
+        |<% if (success) { %>
+        div.alert.alert-info.alert-dismissable
+          button.close(type='button', data-dismiss='alert') &times;
+          | Changes have been saved.
+        |<% } %>
+      div.form-group(class!='<%- errfor.newAccount ? "has-error" : "" %>')
+        label Add Account:
+        div.input-group
+          select.form-control(name='newAccount')
+            for account in data.accounts
+              option(value='#{account._id}') #{account.user.name}
+          div.input-group-btn
+            button.btn.btn-success.btn-add(type='button') Add
+        span.help-block <%- errfor.newUsername %>
+      div.form-group(class!='<%- errfor.visibleAccounts ? "has-error" : "" %>')
+        label Visible Accounts:
+        div.accounts
+          |<% _.each(accounts, function(account) { %>
+          div.input-group
+            input.form-control(disabled=true, value!='<%= account._id || account %>')
+            div.input-group-btn
+              button.btn.btn-danger.btn-delete(type='button')
+                i.fa.fa-trash-o.fa-inverse
+          |<% }); %>
+          |<% if (accounts.length == 0) { %>
+          span.badge no acounts defined
+          |<% } %>
+          span.help-block <%- errfor.visibleAccounts %>
+      div.form-group
+        button.btn.btn-primary.btn-save(type='button') Save Accounts
+        
+  script(type='text/template', id='tmpl-delete')
+    fieldset
+      legend Danger Zone
+      div.alerts
+        |<% _.each(errors, function(err) { %>
+        div.alert.alert-danger.alert-dismissable
+          button.close(type='button', data-dismiss='alert') &times;
+          |<%- err %>
+        |<% }); %>
+      div.form-group
+        span.help-block
+          span.label.label-danger If you do this, it cannot be undone.
+          |&nbsp;
+          span.text-muted You may also create orphaned document relationships too.
+      div.form-group
+        button.btn.btn-danger.btn-delete(type='button') Delete
+
+  script(type='text/template', id='data-record') !{data.record}

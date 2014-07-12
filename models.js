@@ -6,6 +6,11 @@ exports = module.exports = function(app, mongoose) {
   require('./schema/Status')(app, mongoose);
   require('./schema/StatusLog')(app, mongoose);
   require('./schema/Category')(app, mongoose);
+  require('./schema/BrandReport')(app, mongoose);
+  require('./schema/Event')(app, mongoose);
+  require('./schema/Editorial')(app, mongoose);
+  require('./schema/Social')(app, mongoose);
+  require('./schema/Newsletter')(app, mongoose);
 
   //then regular docs
   require('./schema/User')(app, mongoose);

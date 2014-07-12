@@ -450,6 +450,7 @@
       return this;
     }
   });
+ 
 
   app.MainView = Backbone.View.extend({
     el: '.page .container',
@@ -465,6 +466,7 @@
       app.notesCollectionView = new app.NoteCollectionView();
       app.newStatusView = new app.NewStatusView();
       app.statusCollectionView = new app.StatusCollectionView();
+
     }
   });
 
