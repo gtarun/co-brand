@@ -13,13 +13,13 @@
       title: ''
     },
     url: function() {
-      return '/admin/events/'+ (this.isNew() ? '' : this.id +'/');
+      return '/account/events/'+ (this.isNew() ? '' : this.id +'/');
     }
   });
 
   app.RecordCollection = Backbone.Collection.extend({
     model: app.Record,
-    url: '/admin/events/',
+    url: '/account/events/',
     parse: function(results) {
       app.pagingView.model.set({
         pages: results.pages,
@@ -43,57 +43,6 @@
     defaults: {
       pages: {},
       items: {}
-    }
-  });
-
-  app.HeaderView = Backbone.View.extend({
-    el: '#header',
-    template: _.template( $('#tmpl-header').html() ),
-    events: {
-      'submit form': 'preventSubmit',
-      'keypress input[type="text"]': 'addNewOnEnter',
-      'click .btn-add': 'addNew'
-    },
-    initialize: function() {
-      this.model = new app.Record();
-      this.listenTo(this.model, 'change', this.render);
-      this.render();
-    },
-    render: function() {
-      this.$el.html(this.template( this.model.attributes ));
-    },
-    preventSubmit: function(event) {
-      event.preventDefault();
-    },
-    addNewOnEnter: function(event) {
-      if (event.keyCode !== 13) { return; }
-      event.preventDefault();
-      this.addNew();
-    },
-    addNew: function() {
-      if (this.$el.find('[name="pivot"]').val() === '') {
-        alert('Please enter a pivot.');
-      }
-      else if (this.$el.find('[name="title"]').val() === '') {
-        alert('Please enter a title.');
-      }
-      else {
-        this.model.save({
-          pivot: this.$el.find('[name="pivot"]').val(),
-          title: this.$el.find('[name="title"]').val()
-        },{
-          success: function(model, response) {
-            if (response.success) {
-              app.headerView.model.set({ pivot: '', title: '' });
-              Backbone.history.stop();
-              Backbone.history.start();
-            }
-            else {
-              alert(response.errors.join('\n'));
-            }
-          }
-        });
-      }
     }
   });
 
@@ -124,12 +73,6 @@
   app.ResultsRowView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template( $('#tmpl-results-row').html() ),
-    events: {
-      'click .btn-details': 'viewDetails'
-    },
-    viewDetails: function() {
-      location.href = this.model.url();
-    },
     render: function() {
       this.$el.html(this.template( this.model.attributes ));
       return this;
@@ -211,7 +154,6 @@
       app.mainView = this;
       this.results = JSON.parse( unescape($('#data-results').html()) );
 
-      app.headerView = new app.HeaderView();
       app.resultsView = new app.ResultsView();
       app.filterView = new app.FilterView();
       app.pagingView = new app.PagingView();

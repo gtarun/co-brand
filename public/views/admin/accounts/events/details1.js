@@ -235,7 +235,6 @@
     },
     saveAccounts: function() {
       this.model.save();
-      window.location.reload();
     }
   });
 
